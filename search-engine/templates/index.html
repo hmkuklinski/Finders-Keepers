@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Lobster&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+        <h1>Finders Keepers</h1>
+        <div class="mini-container">
+            <form method="post">
+                <div class="topic">
+                    <div><label for="query">Search Topic</label></div>
+                    <div><input type="text" id="query" name="query" required autofocus placeholder="Enter Search Here"></div>
+                </div>
+                <div class="number">
+                    <label for="user_results">Results</label>
+                    <input type="number" id="user_results" name="user_results" required min="1" max="7" placeholder="1"><br><br>
+                </div>
+                <div class="options">
+                    <div><label for="search_location">Where would you like to search?</label></div>
+                    <div class="options-select">
+                        <div>
+                            <input type="radio" id="tiktok" name="search_location" value="1" required>
+                            <label for="tiktok">TikTok</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="twitter" name="search_location" value="2">
+                            <label for="twitter">Twitter</label><br>
+                        </div>
+                        <div>
+                            <input type="radio" id="instagram" name="search_location" value="3">
+                            <label for="instagram">Instagram</label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="submit-btn">
+                    <button type="submit" class="btn-search">Search </button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+</body>
+</html>

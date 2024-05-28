@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Search Results</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Lobster&display=swap" rel="stylesheet">
+    
+    </head>
+<body>
+    <div class="results-title">
+        <h1>Suggested Content:</h1>
+    </div> 
+    <div class="results-container">
+        <div class="results-mini">
+            <!-- use Jinja to create a loop that displays the results-->
+            {% for result in results %}
+                {% if 'discover' not in result.url %}
+                    <div class="query-content">
+                        <div class="{{ result.embed_class }}">{{ result.embed_html | safe }}</div>
+                    </div>
+                {% else %}
+                    <div class="query-content">
+                        <div class="fail-container">
+                            <div class="fail-text">
+                                <h2>Could not load preview </h2>
+                                <p>Please click the photo to view the suggested discover tag </p>
+                            </div>
+                            <div class="fail-pic">
+                                <a href="{{result.url}}" target="_blank">
+                                    <img src="https://www.socialmediaexaminer.com/wp-content/uploads/2020/06/tiktok-discover-page-350.png" alt="cannot display" >
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        
+    </div>
+    <div class='buttons'>
+        <div class="page-btn">
+            {% if has_prev %}
+            <a href="{{ url_for('results', page=page-1) }}" class="btn-search"><ion-icon name="arrow-back-outline"></ion-icon></a>
+            {% endif %}
+        </div>
+        <div class="new-search">
+            <a href="{{ url_for('home') }}" class="btn-search"><ion-icon name="search-outline"></ion-icon> New Search</a>
+        </div>
+        <div class="page-btn">
+            {% if has_next %}
+                <a href="{{ url_for('results', page=page+1) }}" class="btn-search"><ion-icon name="arrow-forward-outline"></ion-icon></a>
+            {% endif %}
+        </div>
+    </div>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,301 @@
+/* ------ fonts ----------*/
+.dancing-script {
+    font-family: "Dancing Script", cursive;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-style: normal;
+}
+.open-sans {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+}
+
+.rubik{
+    font-family: "Rubik", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    font-style: normal;
+}
+
+/* ---general formatting ---*/
+
+body{
+    /* background-image:url('https://us.canvasartrocks.com/cdn/shop/products/Fall_Autumn_Park_Wall_Mural_Wallpaper_a_0b0c0983-6e7c-4236-8127-0f33650df857_1400x.jpg?v=1571715158'); */
+    background-image:url('https://mrwallpaper.com/images/hd/mysterious-forest-trail-j0e81e8vdbl90vl0.jpg'); 
+    background-repeat: no-repeat;
+    background-size:cover;
+    height: 160vh;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    scrollbar-width: thin;
+    scrollbar-color: #14571d transparent; /* thumb color and track color */
+
+}
+
+::-webkit-scrollbar{
+    width:12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track{
+    display:none;
+}
+::-webkit-scrollbar-thumb{
+    background: #14571d;
+    border-radius: 12px;
+}
+::-webkit-scrollbar-thumb:hover{
+    background: #228d30;
+}
+/*------results page formatting ------*/
+
+.buttons{
+    display:flex;
+    align-items:center;
+    justify-content: space-between; /* Distribute buttons equally */
+    width: 100%;
+    position: relative;
+    margin-top: 10px;
+}
+
+ion-icon{
+    font-size: 18px
+}
+
+.page-btn{
+    flex: 0 0 auto;
+}
+.page-btn, .new-search{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin: 0px;
+}
+
+.new-search ion-icon{
+    font-size: 16px;
+}
+
+.new-search a{
+    text-decoration: none;
+}
+
+/* -----------------------RESULTS PAGE!!!! -------------------------*/
+.results-container{
+    font-family: "Open Sans", sans-serif;
+    background-color: rgba(255, 255, 255, 0.377);
+    border-radius: 12px;
+    width: 60%;
+    height: 90%;
+    position: relative; 
+    
+}
+.results-title h1{
+    font-size: 35px;
+    font-family: "Rubik", sans-serif;
+    color: rgb(255, 253, 253);
+}
+.results-title{
+    /* background-color: rgba(255, 255, 255, 0.50); */
+    border-radius: 12px;
+    text-align:center;
+    margin-bottom: 30px;
+}
+
+
+
+/* ------- INSTAGRAM FORMATTING ------- */
+.insta-preview iframe{
+    width: 600px;
+    height: 620px;
+    border-radius: 12px;
+}
+
+.insta-preview{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 70px;
+}
+
+/* ------ TIKTOK FORMATTING ------*/
+.tiktok-vid iframe{
+    height: 680px;
+    border-radius: 12px;
+    width: 530px;
+}
+.tiktok-profile, .tiktok-tag{
+    height: 700px;
+    width: 90%;
+}
+
+
+/* ------- tweet formatting ----------*/
+.twitter-profile, .tweet-preview {
+    overflow: scroll;
+    width: 100%;
+    max-width: 600px;
+    margin-top: 100px;
+    height: 650px; 
+}
+.tweet-preview{
+    overflow:hidden;
+}
+.query-content{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---- index.html formatting ------*/
+.container{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction: column;
+    padding: 3px;
+    font-size: 30px;
+    font-family: "Open Sans", sans-serif;
+    background-color: rgba(255, 255, 255, 0.507);
+    border-radius: 18px;
+    width: 70%;
+}
+
+.container h1{
+    font-family: "Dancing Script", cursive;
+    font-size: 80px;
+    text-decoration:underline;
+}
+
+h1{
+    color:rgb(18, 59, 14);
+    font-size: 48px;
+}
+
+
+
+.mini-container{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    padding: 10px;
+}
+.topic, .number, .options, .options-select, .submit-btn{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction:column;
+    margin: 10px;
+}
+
+.options-select{
+    align-items: flex-start;
+}
+
+/* --- changing input formatting ----*/
+.options input{
+    width: 20px;
+    height: 20px;
+}
+
+.options input:checked + label{
+    color: #1b4e2a;
+}
+
+.container label{
+    width: 25%;
+}
+.topic input,.number input{
+    width: 100%;
+    height: 50px;
+    font-size: 30px;
+    padding: 3px;
+    border-radius: 12px;
+    margin: 5px;
+    border:none;
+    text-align:center;
+    color: black;
+    background-color:whitesmoke;
+}
+
+.number input{
+    width: 160px;
+}
+
+/*-------- btn formatting --------*/
+.btn-search{
+    padding: 10px 20px;
+    margin: 0 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
+    background-color:#1b4e2a;
+    border: 2px solid #236832;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+
+.btn-search:hover{
+    background-color: #35a143;
+    border: 2px solid #236832;
+}
+
+/* ------ for the discover URL suggestions on TikTok ------*/
+.fail-container{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.fail-text, .fail-pic{
+    margin: 5px 15px;
+}
+
+.fail-text{
+    height: 100px;
+}
+
+.fail-pic img{
+    width: 100%;
+}
+
+/* ------- RESPONSIVE ON MOBILE ----------*/
+@media screen and (max-width: 600px) {
+    .results-container{
+        width: 95%;
+    }
+    .page-btn, .new-search{
+        margin: 0px;
+    }
+    .results-title h1{
+        margin-bottom: 50px;
+        font-size: 30px;
+    }
+    .container{
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+    .container h1{
+        text-align:center;
+    }
+
+    .insta-preview iframe{
+        height: 620px;
+    }
+}
