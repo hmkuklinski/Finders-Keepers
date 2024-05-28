@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, e
 import os
 
+#------------------- NOTE: this is python only version/not connected to finders keepers project ------------
 #for the API key stored elsewhere
 load_dotenv()
 API_KEY = os.getenv('API_KEY')
