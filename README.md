@@ -1,47 +1,57 @@
 # Finders-Keepers
-Finders Keepers is a Flask application that utilizes the EXA API to generate suggestive content for users based on the search parameters.
 
-![Screenshot](https://media.discordapp.net/attachments/812752321867153409/1244917279838441474/Screenshot_2024-05-28_031713.png?ex=6656db10&is=66558990&hm=0fac109092f468fd766577d09431fb43dc62f31b002d16d351282a4ab7a436bb&=&format=webp&quality=lossless&width=851&height=397)
 
-The User Interface makes it easy for users to search for their favorite topics on various platforms - TikTok, Twitter/X, and Instagram.
+Finders Keepers is a Flask application that utilizes the EXA API to generate suggestive content for users based on the search parameters. The User Interface makes it easy for users to search for their favorite topics on various platforms - TikTok, Twitter/X, and Instagram.
+
+![Screenshot 2024-05-28 031713](https://github.com/hmkuklinski/Finders-Keepers/assets/143479397/4349c45d-3de9-43c3-9351-dce61492de82)
 
 ## How to Use:
 The user will first type in their desired search topic, followed by the number of searches they would like returned (with a maximum of 7). The user will then select one of the three search options and click the green search button to generate results.
 
-![Screenshot](https://media.discordapp.net/attachments/812752321867153409/1244917280572309584/Screenshot_2024-05-28_031744.png?ex=6656db11&is=66558991&hm=45221decd3f41d6d93bec149215ded6bdd0bb1b1986be4326f3c181a0211f3a7&=&format=webp&quality=lossless&width=858&height=397)
-
-Here is an example of a search that may be entered.
+![Screenshot 2024-05-28 031744](https://github.com/hmkuklinski/Finders-Keepers/assets/143479397/cba3859c-665d-4093-9ef3-72b03d2e4529)
 
 ## Possible Results: TikTok
 The TikTok results can display: suggested user profiles, a discovery tag, or a suggested video.
 
-### User Profile Preview:
-![Screenshot](https://media.discordapp.net/attachments/812752321867153409/1244917281150992434/Screenshot_2024-05-28_031834.png?ex=6656db11&is=66558991&hm=921aad08cb8768dd5bdfc4cf152fbe17e886c5891d897daac00187b72095bece&=&format=webp&quality=lossless&width=858&height=397)
+### Suggested Creator/Account:
 
-### Discovery Tag Preview:
-![Screenshot](https://media.discordapp.net/attachments/812752321867153409/1244917281654439956/Screenshot_2024-05-28_032119.png?ex=6656db11&is=66558991&hm=9373b16ac363c35eaf28ce8b95f3d88ceb727c25bde08db35dafac2da569e38d&=&format=webp&quality=lossless&width=853&height=397)
+![Screenshot 2024-05-28 031834](https://github.com/hmkuklinski/Finders-Keepers/assets/143479397/f1299a84-56f3-4eec-a00d-66351ee16371)
 
-Due to embedding issues with TikTok discovery tags, the user will be prompted to click on the discover image to open the discover tag link in a separate window. Unfortunately no preview of the discovery tag will be shown.
+If you would like to visit the creator's account profile in TikTok, click on the embedded profile name.
 
 ### Video Preview:
-![Screenshot](https://media.discordapp.net/attachments/812752321867153409/1244917282262618173/Screenshot_2024-05-28_032244.png?ex=6656db11&is=66558991&hm=96b613905d414ee73ff267c16e2af2450dcfa69d19556a541b7c84d41aee2396&=&format=webp&quality=lossless&width=858&height=397)
 
-Note: the embedded video will automatically start once it is fully loaded.
+
+![Screenshot 2024-05-26 012701](https://github.com/hmkuklinski/Finders-Keepers/assets/143479397/cf332b0f-fd3b-4010-bcfa-a604060f778d)
+
+The embedded video will automatically start once it is fully loaded. If you would like to open the video in the TikTok app (either to like, comment, or save it), click the video and it will pop up in a new window.
+
+
+### Discovery Tag 
+
+![Screenshot 2024-05-28 032119](https://github.com/hmkuklinski/Finders-Keepers/assets/143479397/4054300f-167a-46b4-baae-c279dc7eccdd)
+
+(disclaimer) Due to embedding issues with TikTok discovery tags, the user will be prompted to click on the discover image to open the discover tag link in a separate window. Unfortunately no preview of the discovery tag will be shown.
+
 
 
 ## Possible Results: Twitter/X
 
 ### User Timeline Preview:
-![Screenshot](https://media.discordapp.net/attachments/812752321867153409/1244917283797598208/Screenshot_2024-05-28_032844.png?ex=6656db11&is=66558991&hm=34cfd63f4631cbc5b63c34c9cda7b8a7dfad3be3bd48752eabd2bad7329223b8&=&format=webp&quality=lossless&width=855&height=397)
 
-The user will be able to see the posts from an account using the scroll bar and click the user profile to open in another tab.
+![Screenshot](https://firebasestorage.googleapis.com/v0/b/codedex-io.appspot.com/o/community%2Fproject-showcase%2Fpost%2Fmb577tJgITTUF2Zyexr4%2FScreenshot%202024-05-28%20032844.png?alt=media&token=5df8cad5-e34f-4e06-8ed8-9527059b4388)
+
+The user will be able to see the posts from an account using the scroll bar. If you would like to view the account, click on the username of the account in the feed.
 
 ### User Post:
+
+![Screenshot 2024-05-28 032902](https://github.com/hmkuklinski/Finders-Keepers/assets/143479397/36c29f2b-88a6-4872-a4c4-b16eacfde99a)
+
 It will sometimes suggest a single tweet that it thinks the user might like. 
 
 
 ## Possible Results: Instagram
-![Screenshot](https://media.discordapp.net/attachments/812752321867153409/1244917279267754045/Screenshot_2024-05-28_023720.png?ex=6656db10&is=66558990&hm=7b0056df65962c794a14724797be9b8859239f6513508587d5a112b2e4376a9a&=&format=webp&quality=lossless&width=847&height=397)
+![Screenshot](https://firebasestorage.googleapis.com/v0/b/codedex-io.appspot.com/o/community%2F30-nites-of-code%2Fpost%2FDsRLoXKqLleHW4g4OZap%2FScreenshot%202024-05-28%20023720.png?alt=media&token=6e221e21-19fc-4780-9607-b1b93a2ef248)
 
 The instagram link will mainly suggest accounts for the users to follow. The user will be able to see a preview of the user's past posts.
 
