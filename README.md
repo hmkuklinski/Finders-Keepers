@@ -5,6 +5,71 @@ Finders Keepers is a Flask application that utilizes the EXA API to generate sug
 
 ![Screenshot 2024-05-28 031713](https://github.com/hmkuklinski/Finders-Keepers/assets/143479397/4349c45d-3de9-43c3-9351-dce61492de82)
 
+## Setup- Get EXA API KEY
+Finders Keepers uses [Exa](https://exa.ai/) to search the web and retrieve content previews.
+
+1. Visit [Exa](https://exa.ai/) and create an account.
+2. Navigate to the [Exa Dashboard](https://dashboard.exa.ai/).
+3. Generate an API key from your dashboard.
+4. Create a `.env` file in the project's root directory.
+5. Add your API key and Flask session key:
+
+   ```env
+   API_KEY=your_exa_api_key
+   SESSION_KEY=your_secret_session_key
+   ```
+
+**Important:** Keep your API key private. Never commit your `.env` file to GitHub. Make sure `.env` is included in your `.gitignore` file.
+
+## Setup & Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd search-engine
+   ```
+
+2. Create a virtual environment:
+   ```bash
+   python -m venv venv
+   ```
+
+3. Activate the virtual environment:
+
+   **Windows (PowerShell):**
+   ```powershell
+   .\venv\Scripts\Activate.ps1
+   ```
+
+   **Mac/Linux:**
+   ```bash
+   source venv/bin/activate
+   ```
+
+4. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. Configure environment variables by creating a `.env` file in the project root:
+   ```env
+   EXA_API_KEY=your_api_key
+   ```
+
+6. Run the application:
+   ```bash
+   python app.py
+   ```
+
+7. Open the application in your browser at `http://127.0.0.1:5000`.
+
+### Deactivating the Virtual Environment
+
+When finished, deactivate the virtual environment:
+```bash
+deactivate
+```
+
 ## How to Use:
 The user will first type in their desired search topic, followed by the number of searches they would like returned (with a maximum of 7). The user will then select one of the three search options and click the green search button to generate results.
 
