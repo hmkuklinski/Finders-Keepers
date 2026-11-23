@@ -1,126 +1,263 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from exa_py import Exa
 from dotenv import load_dotenv
-import os, requests
+from urllib.parse import urlparse, parse_qs
+from html.parser import HTMLParser
+from uuid import uuid4
+import os
+import re
+import requests
 
-# Load the API key from the .env file
 load_dotenv()
 API_KEY = os.getenv('API_KEY')
 
-# Initialize the Exa object with the API key
 exa = Exa(API_KEY)
-
 app = Flask(__name__)
 app.secret_key = os.getenv('SESSION_KEY')
 
-def embed_content(vid_url, loc):
-    #note: pass in search_location_input for loc (number value stored for each option clicked)
-    # 1- tiktok, 2- twitter, 3-instagram
-    
-    # loc 1 == 'tiktok'
-    if loc == '1':
-        params = {
-            'url': vid_url,
-            'maxwidth': 200,
-            'maxheight': 200
-            } #need tiktok url to pass as param for requests
-        response = requests.get('https://www.tiktok.com/oembed', params=params) #need to make request to oEmbed API to fetch HTML for tiktok vid
-        embed_html = response.json().get('html', '') #grab HTML from JSON
-        if '/video/' in vid_url:
-            embed_class= 'tiktok-vid'
-        elif '/tag/' in vid_url:
-            embed_class='tiktok-tag'
+# Temporary storage for search results.
+search_cache = {}
+
+
+# Get Metadata from websites
+class MetadataParser(HTMLParser):
+    """Extract Open Graph images and descriptions from a webpage."""
+
+    def __init__(self):
+        super().__init__()
+        self.metadata = {}
+
+    def handle_starttag(self, tag, attrs):
+        if tag != 'meta':
+            return
+        attrs = dict(attrs)
+       
+        key = attrs.get('property') or attrs.get('name')
+        value = attrs.get('content')
+        if key and value:
+            self.metadata[key.lower()] = value
+
+
+def get_website_metadata(url):
+    """Retrieve a website's Open Graph metadata."""
+    metadata = {
+        'image': None,
+        'description': None
+    }
+
+    try:
+        response = requests.get(
+            url,
+            headers={'User-Agent': 'Mozilla/5.0'},
+            timeout=5
+        )
+        response.raise_for_status()
+        parser = MetadataParser()
+        parser.feed(response.text)
+
+        # extract Open Graph and Twitter metadata if available
+        metadata['image'] = (
+            parser.metadata.get('og:image')
+            or parser.metadata.get('twitter:image')
+        )
+        metadata['description'] = (
+            parser.metadata.get('og:description')
+            or parser.metadata.get('description')
+            or parser.metadata.get('twitter:description')
+        )
+
+    except requests.RequestException as e:
+        print(f"Could not retrieve website metadata for {url}: {e}")
+
+    return metadata
+
+
+# YouTube ID Extraction
+def get_youtube_id(url):
+    """Extract a YouTube video ID from supported URL formats."""
+
+    parsed = urlparse(url)
+
+    if parsed.hostname in ('youtu.be', 'www.youtu.be'):
+        return parsed.path.strip('/').split('/')[0]
+
+    if parsed.hostname and 'youtube.com' in parsed.hostname:
+        if parsed.path == '/watch':
+            return parse_qs(parsed.query).get('v', [None])[0]
+
+        match = re.match(r'^/(?:embed|shorts)/([^/?]+)', parsed.path)
+        if match:
+            return match.group(1)
+
+    return None
+
+
+def get_preview(url, title, description=''):
+    """Identify the content type and prepare its preview information."""
+
+    parsed = urlparse(url)
+    domain = (parsed.hostname or '').lower()
+    path = parsed.path.strip('/')
+
+    preview = {
+        'type': 'website',
+        'embed_url': None,
+        'thumbnail_url': None,
+        'embed_html': None,
+        'description': description
+    }
+
+    # YouTube
+    youtube_id = get_youtube_id(url)
+
+    if youtube_id:
+        preview['type'] = 'youtube'
+        preview['embed_url'] = (f'https://www.youtube-nocookie.com/embed/{youtube_id}')
+        preview['thumbnail_url'] = (f'https://img.youtube.com/vi/{youtube_id}/hqdefault.jpg')
+        return preview
+
+    # Spotify
+    if domain.endswith('spotify.com'):
+        parts = path.split('/')
+
+        if len(parts) >= 2 and parts[0] in ('artist', 'album', 'track', 'playlist', 'episode', 'show'):
+            preview['type'] = 'spotify'
+            preview['embed_url'] = (f'https://open.spotify.com/embed/{parts[0]}/{parts[1]}')
+            return preview
+
+    # TikTok
+    if domain.endswith('tiktok.com'):
+        preview['type'] = 'tiktok'
+
+        try:
+            response = requests.get(
+                'https://www.tiktok.com/oembed',
+                params={'url': url},
+                timeout=5
+            )
+            response.raise_for_status()
+            preview['embed_html'] = response.json().get('html')
+
+        except (requests.RequestException, ValueError) as e:
+            print(f"TikTok preview unavailable: {e}")
+
+        return preview
+
+    # Instagram
+    if domain.endswith('instagram.com'):
+        preview['type'] = 'instagram'
+        return preview
+
+    # X / Twitter
+    if domain.endswith(('x.com', 'twitter.com')):
+        if '/status/' in url:
+            preview['type'] = 'twitter'
         else:
-            embed_class='tiktok-profile'
-    # loc 2 == 'twitter'
-    elif loc == '2':
-        #this is a tweet that we can embed:
-        if '/status/' in vid_url:
-            tweet_id = vid_url.split('/')[-1]  # Extract tweet ID from the tweet URL
-            tweet_url = f"https://twitter.com/Twitter/status/{tweet_id}"  # Construct tweet URL
-            embed_html = f'<blockquote class="twitter-tweet"><a href="{tweet_url}"></a></blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>'
-            embed_class = 'tweet-preview'
-        #this is a user profile suggestion:
-        else:
-            profile_url = vid_url
-            embed_html = f'<a class="twitter-timeline" href="{profile_url}?ref_src=twsrc%5Etfw">Tweets by {profile_url.split("/")[-1]}</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>'
-            embed_class = 'twitter-profile'
+            preview['type'] = 'profile'
 
-    # loc 3 == 'instagram'
-    elif loc == '3':
-        embed_html = f'<blockquote class="instagram-media" data-instgrm-permalink="{vid_url}" data-instgrm-version="13"></blockquote><script async src="//www.instagram.com/embed.js"></script>'
-        embed_class= 'insta-preview'
-    else:
-        # Default case or handle other platforms
-        embed_html = f'<div>No embed available for platform: {loc}</div>'
-        embed_class = 'unknown'
-    return {'html': embed_html, 'class': embed_class}
+        return preview
 
+    # General websites
+    metadata = get_website_metadata(url)
 
+    preview['thumbnail_url'] = metadata['image']
 
+    if metadata['description']:
+        preview['description'] = metadata['description']
+
+    return preview
+
+# Home route
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    if request.method == 'POST': #user clicks submit button
-        query = request.form['query'] #search for the 'query' --> get user's desired topic
-        user_results = int(request.form['user_results']) # number of results user wants to see
-        search_location_input = request.form['search_location'] #search_location is name of options/selections (radio)
-        # Determine the search location based on the user's selection
-        if search_location_input == "1":
-            search_location = 'https://www.tiktok.com'
-        elif search_location_input == "2":
-            search_location = 'https://www.twitter.com'
-        elif search_location_input == '3':
-            search_location= 'https://www.instagram.com'
-        else:
-            search_location = 'https://www.tiktok.com'
 
-        # API call
-        response = exa.search(
-            query=query,
-            num_results=user_results,
-            type='keyword',
-            include_domains=[search_location]
-        )
-        print(response)
+    if request.method == 'POST':
+        query = request.form.get('query', '').strip()
+        user_results = int(request.form.get('user_results', 10))
 
-        # Prepare the results to be displayed
+        # if no results, return to home page
+        if not query:
+            return redirect(url_for('home'))
+
         results = []
-        for result in response.results: #want to go through each result and create:
-            embed_info = embed_content(result.url, search_location_input) 
-            results.append({'title': result.title, 'url': result.url, 'embed_html': embed_info['html'], 'embed_class': embed_info['class']})
-        
-        #session (temp storage across different requests):
-        session['results'] = results
-        
-        #to keep track of total results wanted by user:
-        session['total_results'] = len(results)
-        
-        #redirect to results page to show results:
-        return redirect(url_for('results', page=1))
-    else:
-        return render_template('index.html')
-    
+
+        try:
+            # Search without domain restrictions.
+            response = exa.search(
+                query=query,
+                num_results=user_results,
+                type='keyword'
+            )
+
+            # Display search information for debugging
+            print('\n--- EXA SEARCH ---')
+            print('Query:', query)
+            print('Number of results:', len(response.results))
+
+            # Retrieve page text for descriptions.
+            urls = [result.url for result in response.results]
+            content_by_url = {}
+
+            if urls:
+                try:
+                    contents = exa.get_contents(urls, text=True)
+
+                    for content in contents.results:
+                        content_by_url[content.url] = (content.text or '')
+
+                except Exception as e:
+                    print('Could not retrieve page content:', repr(e))
+
+            # Build preview information for each result.
+            for result in response.results:
+
+                page_text = content_by_url.get(result.url, '')
+                description = ' '.join(page_text.split())[:200]
+                preview = get_preview(result.url, result.title, description)
+
+                results.append(
+                    {
+                        'title': result.title or result.url,
+                        'url': result.url,
+                        'description': preview['description'],
+                        'preview_type': preview['type'],
+                        'embed_url': preview['embed_url'],
+                        'thumbnail_url': preview['thumbnail_url'],
+                        'embed_html': preview['embed_html']
+                    }
+                )
+
+        except Exception as e:
+            print('Search error:', repr(e))
+
+        search_id = str(uuid4())
+        search_cache[search_id] = results
+
+        session['search_id'] = search_id
+        session['query'] = query
+
+        return redirect(url_for('results'))
+
+    return render_template('index.html')
+
+# Results route
 @app.route('/results')
 def results():
-    results= session.get('results',[])
-    total_results = len(results)
-    results_per_page = 1
-    page = int(request.args.get('page', 1))-1
-    
-    if page<0 or page >= total_results: #keeps in bound of index range!
-        return redirect(url_for('results', page=1)) 
-    
-     # Get the single result for the current page
-    page_result = results[page:page + results_per_page]
-    
-     # Determine if there is a next or previous page
-    has_next = (page + results_per_page) < total_results
-    has_prev = page > 0
-    
-    return render_template('results.html', results=page_result,
-        page=page+1,
-        has_next=has_next,
-        has_prev=has_prev)
+
+    search_id = session.get('search_id')
+    results = search_cache.get(search_id, [])
+
+    # return to home if no results are found
+    if not results:
+        return redirect(url_for('home'))
+
+    # display results page with search results
+    return render_template(
+        'results.html',
+        results=results,
+        total_results=len(results),
+        query=session.get('query', '')
+    )
 
 
 if __name__ == '__main__':

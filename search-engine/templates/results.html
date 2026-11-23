@@ -1,63 +1,151 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Search Results</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Lobster&display=swap" rel="stylesheet">
-    
-    </head>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results | Finders Keepers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
 <body>
-    <div class="results-title">
-        <h1>Suggested Content:</h1>
-    </div> 
-    <div class="results-container">
-        <div class="results-mini">
-            <!-- use Jinja to create a loop that displays the results-->
-            {% for result in results %}
-                {% if 'discover' not in result.url %}
-                    <div class="query-content">
-                        <div class="{{ result.embed_class }}">{{ result.embed_html | safe }}</div>
-                    </div>
-                {% else %}
-                    <div class="query-content">
-                        <div class="fail-container">
-                            <div class="fail-text">
-                                <h2>Could not load preview </h2>
-                                <p>Please click the photo to view the suggested discover tag </p>
+    <nav class="navbar">
+        <a href="{{ url_for('home') }}" class="logo">
+            <span class="logo-icon">🔍︎</span>
+            Finders Keepers
+        </a>
+        <a href="{{ url_for('home') }}" class="nav-link active"> New Search </a>
+    </nav>
+
+    <main class="results-container">
+
+        <section class="results-heading">
+            <p class="eyebrow">DISCOVER</p>
+            <h1>Search Results</h1>
+            <p class="results-query">Results for <strong>{{ query }}</strong></p>
+            <p class="results-count"> {{ total_results }} results found </p>
+        </section>
+
+        {% if results %}
+            <section class="results-grid">
+                {% for result in results %}
+                    <article class="result-card">
+                        <!-- YouTube -->
+                        {% if result.preview_type == 'youtube' %}
+                            <div class="preview-container youtube-preview">
+                                <iframe
+                                    src="{{ result.embed_url }}"
+                                    title="{{ result.title }}"
+                                    loading="lazy"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen>
+                                </iframe>
                             </div>
-                            <div class="fail-pic">
-                                <a href="{{result.url}}" target="_blank">
-                                    <img src="https://www.socialmediaexaminer.com/wp-content/uploads/2020/06/tiktok-discover-page-350.png" alt="cannot display" >
+
+                        <!-- Spotify -->
+                        {% elif result.preview_type == 'spotify' %}
+                            <div class="preview-container spotify-preview">
+                                <iframe
+                                    src="{{ result.embed_url }}"
+                                    title="{{ result.title }}"
+                                    loading="lazy"
+                                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+
+                        <!-- TikTok -->
+                        {% elif result.preview_type == 'tiktok' %}
+                            {% if result.embed_html %}
+                                <div class="social-preview tiktok-preview">
+                                    {{ result.embed_html | safe }}
+                                </div>
+
+                            {% else %}
+                                <a
+                                    href="{{ result.url }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="preview-placeholder">
+                                    View TikTok
                                 </a>
+                            {% endif %}
+
+                        <!-- Instagram -->
+                        {% elif result.preview_type == 'instagram' %}
+                            <div class="social-preview instagram-preview">
+                                <blockquote
+                                    class="instagram-media"
+                                    data-instgrm-permalink="{{ result.url }}"
+                                    data-instgrm-version="14">
+                                </blockquote>
                             </div>
+
+                        <!-- X / Twitter -->
+                        {% elif result.preview_type == 'twitter' %}
+                            <div class="social-preview twitter-preview">
+                                <blockquote class="twitter-tweet">
+                                    <a href="{{ result.url }}"></a>
+                                </blockquote>
+                            </div>
+                        <!-- General websites and profiles -->
+                        {% else %}
+                            <a
+                                href="{{ result.url }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="website-preview">
+
+                                {% if result.thumbnail_url %}
+                                    <img
+                                        src="{{ result.thumbnail_url }}"
+                                        alt="{{ result.title }}"
+                                        loading="lazy"
+                                        class="result-thumbnail"
+                                    >
+                                {% else %}
+                                    <div class="preview-placeholder">
+                                        <span>View Website</span>
+                                    </div>
+                                {% endif %}
+                            </a>
+                        {% endif %}
+
+                        <div class="result-info">
+                            <div class="result-platform">
+                                {{ result.preview_type | replace('_', ' ') | title }}
+                            </div>
+                            <h2>{{ result.title }}</h2>
+
+                            {% if result.description %}
+                                <p class="result-description">
+                                    {{ result.description }}
+                                </p>
+                            {% endif %}
+                            <a
+                                href="{{ result.url }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="result-link">
+                                Visit Source
+                            </a>
                         </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-        
-    </div>
-    <div class='buttons'>
-        <div class="page-btn">
-            {% if has_prev %}
-            <a href="{{ url_for('results', page=page-1) }}" class="btn-search"><ion-icon name="arrow-back-outline"></ion-icon></a>
-            {% endif %}
-        </div>
-        <div class="new-search">
-            <a href="{{ url_for('home') }}" class="btn-search"><ion-icon name="search-outline"></ion-icon> New Search</a>
-        </div>
-        <div class="page-btn">
-            {% if has_next %}
-                <a href="{{ url_for('results', page=page+1) }}" class="btn-search"><ion-icon name="arrow-forward-outline"></ion-icon></a>
-            {% endif %}
-        </div>
-    </div>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    
+                    </article>
+                {% endfor %}
+            </section>
+        {% else %}
+            <div class="empty-results">
+                <h2>No results found</h2>
+                <p>Try another search term.</p>
+            </div>
+        {% endif %}
+    </main>
+
+    <!-- Load platform embed scripts once per page. -->
+    <script async src="https://www.tiktok.com/embed.js"></script>
+    <script async src="https://www.instagram.com/embed.js"></script>
+    <script async src="https://platform.twitter.com/widgets.js"></script>
 </body>
 </html>

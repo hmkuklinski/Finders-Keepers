@@ -1,52 +1,99 @@
+
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Finders Keepers | Discover</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Lobster&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="container">
-        <h1>Finders Keepers</h1>
-        <div class="mini-container">
-            <form method="post">
-                <div class="topic">
-                    <div><label for="query">Search Topic</label></div>
-                    <div><input type="text" id="query" name="query" required autofocus placeholder="Enter Search Here"></div>
-                </div>
-                <div class="number">
-                    <label for="user_results">Results</label>
-                    <input type="number" id="user_results" name="user_results" required min="1" max="7" placeholder="1"><br><br>
-                </div>
-                <div class="options">
-                    <div><label for="search_location">Where would you like to search?</label></div>
-                    <div class="options-select">
-                        <div>
-                            <input type="radio" id="tiktok" name="search_location" value="1" required>
-                            <label for="tiktok">TikTok</label>
-                        </div>
-                        <div>
-                            <input type="radio" id="twitter" name="search_location" value="2">
-                            <label for="twitter">Twitter</label><br>
-                        </div>
-                        <div>
-                            <input type="radio" id="instagram" name="search_location" value="3">
-                            <label for="instagram">Instagram</label>
-                        </div>
+
+<body class="home-body">
+    <nav class="navbar">
+        <a href="{{ url_for('home') }}" class="logo">
+            <span class="logo-icon">🔍︎</span>
+            Finders Keepers
+        </a>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="nav-link active">
+                Discover
+            </a>
+        </div>
+    </nav>
+
+    <main class="home-container">
+        <section class="hero">
+            <p class="slogan">
+                YOUR PERSONAL CONTENT FINDER
+            </p>
+            <h1>
+                Find something
+                <span>worth viewing.</span>
+            </h1>
+            <p class="hero-description">
+                Discover interesting content from across your favorite
+                social media platforms, all in one place.
+            </p>
+
+            <!-- Search Form -->
+            <div class="search-panel">
+                <form method="post">
+                    <!-- Search Topic -->
+                    <div class="form-group">
+                        <label for="query"> What are you looking for?</label>
+                        <input type="text" id="query" name="query" required autofocus placeholder="Try travel inspiration, recipes, fashion...">
                     </div>
 
-                </div>
-                <div class="submit-btn">
-                    <button type="submit" class="btn-search">Search </button>
-                </div>
-            </form>
-        </div>
-        
-    </div>
+                    <!-- Number of Results -->
+                    <div class="form-group">
+                        <label for="user_results"> How many results per platform? </label>
+                        <input type="number" id="user_results" name="user_results" required min="1" max="7" placeholder="Choose between 1 and 7">
+                    </div>
+
+
+                    <!-- Platforms -->
+                    <div class="form-group" id="searching-across">
+                        <label> Searching across </label>
+                        <div class="platform-options">
+                            <div class="platform-card">
+                                <span class="platform-icon">♪</span>
+                                <span class="platform-name">TikTok</span>
+                            </div>
+                            <div class="platform-card">
+                                <span class="platform-icon">𝕏</span>
+                                <span class="platform-name">Twitter / X</span>
+                            </div>
+                            <div class="platform-card">
+                                <span class="platform-icon">📸</span>
+                                <span class="platform-name">Instagram</span>
+                            </div>
+                            <div class="platform-card">
+                                <span class="platform-icon">▶</span>
+                                <span class="platform-name">YouTube</span>
+                            </div>
+                            <div class="platform-card">
+                                <span class="platform-icon">🎵</span>
+                                <span class="platform-name">Spotify</span>
+                            </div>
+                            <div class="platform-card">
+                                <span class="platform-icon">🌐</span>
+                                <span class="platform-name">Internet</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="home-search-btn"> Discover Content <span>→</span> </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="dashboard-footer">
+        <p>Finders Keepers · Discover more of what interests you.</p>
+    </footer>
+
 </body>
 </html>
